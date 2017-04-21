@@ -3,8 +3,8 @@ import random
 
 import GraphData_IO
 
-datapath ='/home/s1520015/Experiment/CodeChef/OriginalTrees/'
-xypath = '/home/s1520015/Experiment/CodeChef/GCNN_1V/xy/'
+datapath ='/home/s1520015/Experiment/CodeChef/'
+xypath = '/home/s1520015/Experiment/CodeChef/MNMX/xy/'
 # datapath ='/home/s1520015/Experiment/5Folds/'
 # xypath = '/home/s1520015/Experiment/GCNN_NoOps/2V/xy/'
 experiment = 'Virus' # Virus or CodeChef
@@ -15,7 +15,7 @@ toktype ='dict_tokType.txt' # mapping token ---> type of token
 numDis = 600
 numOut = 2
 
-numView =2
+numView =1
 numCon =[100,600]
 
 # Create vector for tokens
