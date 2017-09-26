@@ -16,6 +16,7 @@
 #include<math.h>
 #include <stdio.h>
 #include"activation.h"
+#include"loss.h"
 #include <malloc.h>
 #include <ctime>
 #include "file_io.cpp"
@@ -37,6 +38,7 @@ int m_nEpoch;
 float m_alpha;
 float m_CVacc =0.0;
 float * m_weights, * m_biases; // weights and biases at max accuracy of CV
+//void (* dloss)( int ytrue, float * ypred, float* dEdz, int n);
 
 Layer ** global;
 int main(int argc, char* argv[]){
@@ -49,26 +51,28 @@ int main(int argc, char* argv[]){
 	}
 	
 	// read parameters from setting file
-	char* params[80];
-	getparameters(params);
+	var* varlist = getparameters();
+	if(varlist==NULL)
+	{
+		cout<<"Can not read initial parameters from file: "<<settingfile<<endl;
+		return 0;
+	}
 	
 	float learn_rate;
 	float K;
 	//eta = 1.0;
 //	float C_weights_0;
-	batch_size = 100;
+	batch_size = atoi(getvarvalue(varlist, "batch"));
 	int n_miniGD = 0;
 	bool n_miniGDchange = false;
 //	int tmp1 = 0;
 
-	float beta = 0.0;
+	alpha = atof(getvarvalue(varlist, "alpha")); //0.1
+	float beta = atof(getvarvalue(varlist, "beta")); //0.7
 	
-	cout << "WARNING: no parameters" << endl;
-	batch_size =atoi(params[1]);
 	C_weights = 0.000001;
 	
-	alpha = atof(params[33]); //0.1
-	beta = atof(params[35]);//0.7
+
 	//beta = 0;
 	p_dropout1 = 0.5;
 	p_dropout2 = 0;
@@ -94,16 +98,16 @@ int main(int argc, char* argv[]){
 	int n_sample = 0;
 	float train_correct = 0;
     // some common parameters
-	num_train =atoi(params[11]);// 31200;
-	num_CV = atoi(params[13]); //10400;
-	num_test = atoi(params[15]); //10400;
-	num_label = atoi(params[17]);//104
+	num_train =atoi(getvarvalue(varlist,"num_train"));// 31200;
+	num_CV = atoi(getvarvalue(varlist,"num_cv")); //10400;
+	num_test = atoi(getvarvalue(varlist,"num_test")); //10400;
+	num_label = atoi(getvarvalue(varlist,"output"));//104
 	printf("\nnum train = %d, num CV = %d, num test = %d", num_train, num_CV, num_test);
 	printf("\nnum out = %d", num_label);
 	
 	int n_train = 1;
-	//cout<<"good!!"<<endl;
-	char * fp = params[19]; 
+
+	char * fp = getvarvalue(varlist,"param_file"); // file store: embedding + weights + biases
 	
 	ReadParam(fp);
 
@@ -122,28 +126,30 @@ int main(int argc, char* argv[]){
  	
  	// data files
  	f_train = (char*) malloc(sizeof(char) * 300) ;
-    snprintf( f_train, 300, "./xy/%s",params[21]);
+    snprintf( f_train, 300, "%s",getvarvalue(varlist,"x_train"));
     
 	f_CV = (char*) malloc(sizeof(char) * 300) ;
-	snprintf( f_CV , 300, "./xy/%s",params[23]);
+	snprintf( f_CV , 300, "%s",getvarvalue(varlist,"x_cv"));
 	
 	f_test = (char*) malloc(sizeof(char) * 300) ;
-	snprintf( f_test , 300, "./xy/%s",params[25]);
+	snprintf( f_test , 300, "%s",getvarvalue(varlist,"x_test"));
 	
 	f_ytrain = (char*) malloc(sizeof(char) * 300) ;
-	snprintf( f_ytrain , 300, "./xy/%s",params[27]);
+	snprintf( f_ytrain , 300, "%s",getvarvalue(varlist,"y_train"));
 	
 	f_yCV = (char*) malloc(sizeof(char) * 300) ;
-	snprintf( f_yCV , 300, "./xy/%s", params[29]);
+	snprintf( f_yCV , 300, "%s", getvarvalue(varlist,"y_CV"));
 	
 	f_ytest = (char*) malloc(sizeof(char) * 300) ;
-	snprintf( f_ytest , 300, "./xy/%s",params[31]);
+	snprintf( f_ytest , 300, "%s",getvarvalue(varlist,"y_test"));
 	
 	database = (char*) malloc(sizeof(char) * 20);
-	snprintf( database , 20, "%s",params[39]);
+	snprintf( database , 20, "%s",getvarvalue(varlist,"database"));
 	printf("\ndatabase: %s\n",database);
 	
-	getActiveFunction(params[37]);
+	getActiveFunction(getvarvalue(varlist,"act_func"));
+	getdLoss(getvarvalue(varlist,"loss"));
+	
 	ReadAllData();
 	cout << "INFO: Data loaded" << endl;
 	// check x train, cv, test
@@ -151,35 +157,35 @@ int main(int argc, char* argv[]){
 //	getNetInfor(buf_CV, num_CV, "cvnet_info.txt");
 //	getNetInfor(buf_test, num_test, "testnet_info.txt");
 
-
 	isTraining = true;
 	srand(314159);
 	//ReadTrainNetwork(6);
 	//ReadTrainNetwork(7);
 	cout<<num_weights<<endl;
 	
-	int tobegin = atoi(params[3]);
-	if(tobegin != 1){
-	    readTBCNNParam2(tobegin,alpha,n_miniGDchange);
+	int tobegin = atoi(getvarvalue(varlist,"begin"));
+	char* model_file = getvarvalue(varlist,"model_file");  
+	if(strcmp(model_file,"none") == 0)
+	{
+		cout<<"randomly initialize weights and biases"<<endl;
+	}
+	else
+	{
+		cout<<"read pretrained weights and biases from: '"<<model_file<<"'"<<endl;
+//	    readTBCNNParam2(tobegin,alpha,n_miniGDchange);
+		ReadNetParams(model_file);
 	    n_miniGD = tobegin*num_train/batch_size;
 	}
 	//write :
 	//-0.0170019
 	//0.617616
 	// write 
-	int nEpoch = atoi(params[5]);
-	int pmark = atoi(params[7]);
-	int mode = atoi(params[9]);
-	printf("\nBegin = %d, Epoch =%d\n", tobegin,nEpoch);
-	printf("\nmark pos = %d\n",  pmark);
-	if (mode == 0)
-		printf("\nmode = Probabilities\n"); //:"Output labels"
-	if (mode ==1)
-		printf("\nmode = Output labels\n");
-	if (mode ==0)
-		printf("\nmode = Vector representation\n");
+	int nEpoch = atoi(getvarvalue(varlist,"epoch_num"));
 	
-	bool markCV= 1;	
+	printf("\nBegin = %d, Epoch =%d\n", tobegin,nEpoch);
+
+	
+	bool markCV= 1;	// use CV or train to valid the model
 	if (num_CV<=10)
 	{
 		printf("\nnum_CV <10, save model at maximum of training\n");
@@ -189,8 +195,10 @@ int main(int argc, char* argv[]){
 		
 	int t_start=clock();
 	
-	if (tobegin >= nEpoch) // test mode
+	char * phase = getvarvalue(varlist,"epoch_num");
+	if (strcmp(phase,"test") ==0) // test mode
 	{
+		cout<<"testing and writing results..."<<endl;
 		// write to file
 		FILE *f_vectest, *f_veccv, *f_vectrain,*f_probcv, *f_probtest;
 		char cv_vec[300];
@@ -215,9 +223,9 @@ int main(int argc, char* argv[]){
 		f_probtest = fopen(test_prob, "w");
 		
 
-		predictCV(y_CV, num_CV, f_veccv, f_probcv, mode);
-		predictTest(y_test, num_test, f_vectest, f_probtest,mode);
-		predictTrain(y_train, num_train, f_vectrain, mode);
+		predictCV(y_CV, num_CV, f_veccv, f_probcv);
+		predictTest(y_test, num_test, f_vectest, f_probtest);
+		predictTrain(y_train, num_train, f_vectrain);
 		
 		fclose(f_vectest);
 		fclose(f_veccv);
@@ -226,7 +234,7 @@ int main(int argc, char* argv[]){
 		fclose(f_probtest);
 		return 0;
 	}
-
+	cout<<"training..."<<endl;
 	for (int epoch = tobegin; epoch <= nEpoch; ++ epoch) {
 		//break;
 		float J = 0;
@@ -250,8 +258,8 @@ int main(int argc, char* argv[]){
 			if (i == num_train-1) {
 				cout << "Epoch = "<< epoch<<" i = "<<i;
 				
-				float CVacc = predictCV(y_CV, num_CV, NULL, NULL,0);
-				predictTest(y_test, num_test, NULL,NULL,0);
+				float CVacc = predictCV(y_CV, num_CV, NULL, NULL);
+				predictTest(y_test, num_test, NULL,NULL);
 				
 				cout <<  "  trainerror : " <<  J / n_train<<"  train accuracy : "<<train_correct/n_train<< endl;
 				n_train = 0;J = 0;
@@ -319,14 +327,19 @@ int main(int argc, char* argv[]){
 			//cout<<"inmain : lastidx = "<<lastidx<<endl;
 			//printf("inmain : %4f, %4f\n", Xnet[ lastidx ]->y[0],Xnet[ lastidx ]->y[1]);
 			int train_predict = 0;
-		        float max_pro = 0.0;	
+		    float max_pro = 0.0;	
+		    
+			//compute dloss( int ytrue, float * ypred, float* dEdz, int n);
+			dloss(t,h,Xnet[ lastidx ]->dE_dz,num_label);
+				
 			for(int x = 0; x < num_label; x++){
 				//yy = ;
 				if(h[x]>max_pro){
 				    train_predict = x;
 				    max_pro = h[x];
 				}
-				Xnet[ lastidx ]->dE_dz[x] = Xnet[ lastidx ]->y[x];
+//				Xnet[ lastidx ]->dE_dz[x] = Xnet[ lastidx ]->y[x];
+				
 				if(!(Xnet[ lastidx ]->dE_dz[x]>=0 || Xnet[ lastidx ]->dE_dz[x]<=0))
 					cout<<"@@@@@@@@@@@@@@@@Xnet[ lastidx ]->dE_dz is nan at x = "<<x<<endl;
 				//cout<<"!!  "<<Xnet[ lastidx ]->dE_dz[x]<<endl;;
@@ -335,7 +348,7 @@ int main(int argc, char* argv[]){
 			    train_correct += 1;
 			}
 			//cout<<"$$$$$$$$$$$$$$$$$$$$$Xnet[ lastidx ]->dE_dz[76] = "<<Xnet[ lastidx ]->dE_dz[76]<<" and Xnet[ lastidx ]->name = "<<Xnet[ lastidx ]->name<<endl;
-			Xnet[ lastidx ] -> dE_dz[ t ] -= 1;
+//			Xnet[ lastidx ] -> dE_dz[ t ] -= 1;
 			//cout<<"beginBack"<<endl;
 			CleanDerivative(Xnet, len);
 			//cout<<"begin BackPropagation i =  "<<i<<endl;
@@ -363,23 +376,17 @@ int main(int argc, char* argv[]){
 			}
 
 		}
-		//learn_rate *= 0.6;
-//		char des[50] = "param_pretrain";
-//		des[14] = '0' + epoch;
-//		des[15] = '\0';
-//		SaveParam( des );
 
 	}
 	// save parameters at the max accuracy of CV
-//	printf("\n Save params at epoch: %d", m_nEpoch);
+	//	printf("\n Save params at epoch: %d", m_nEpoch);
 	memcpy(weights, m_weights, num_weights*sizeof(float));
 	memcpy(biases,m_biases, num_biases*sizeof(float));
-	saveTBCNNParam2(m_nEpoch,m_alpha,n_miniGDchange);
+	saveNetParams(m_nEpoch,m_alpha,n_miniGDchange);
 	
 	int t_stop =clock();
 	cout<<"\nrunning time: "<< t_stop - t_start;
 	cout << "\ndone" << endl;
 
 }
-
 

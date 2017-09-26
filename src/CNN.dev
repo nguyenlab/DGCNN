@@ -1,7 +1,7 @@
 [Project]
 FileName=CNN.dev
 Name=CNN
-UnitCount=18
+UnitCount=21
 Type=1
 Ver=2
 ObjFiles=
@@ -221,7 +221,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=Z:\TBCNN_New\TBCNN\src\test.h
+FileName=loss.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -241,7 +241,17 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit20]
-FileName=test_loadnet.cpp
+FileName=loss.cpp
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit21]
+FileName=initparams.h
 CompileCpp=1
 Folder=
 Compile=1

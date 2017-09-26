@@ -38,6 +38,7 @@ extern int num_train;
 extern int num_CV;
 extern int num_test;
 extern int num_label;
+extern float* classweight;
 
 extern float C_weights;
 extern float p_dropout1;
@@ -58,6 +59,7 @@ void RandomInitParam();
 
 void ReadParam(char* filepath);
 void SaveParam(const char * filepath);
-void saveTBCNNParam2(int epoch,float alpha,bool n_miniGDchange);
-void readTBCNNParam2(int epoch,float alpha,bool n_miniGDchange);
+void ReadNetParams(const char * filepath);
+void saveNetParams(int epoch,float alpha,bool n_miniGDchange);
+void readNetParams(int epoch,float alpha,bool n_miniGDchange);
 #endif /* GLOBAL_H_ */

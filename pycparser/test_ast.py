@@ -84,27 +84,14 @@ def GetMajorFunction(root):
 
 
 text = """
-typedef long long int ll;
-int GCD(int a, int b)
-{
-    if (a == 0 || b == 0)
-        return 0;
-    if (a == b)
-        return a;
-    if (a > b)
-        return GCD(a-b, b);
-    return GCD(a, b-a);
-}
 int main()
 {
-    int t,a,b;
-    cin>>t;
-    while(t--)
-    {
-        cin>>a>>b;
-        cout<<GCD(a,b)<<" "<<a*b/GCD(a,b)<<endl;
-    }
-    return 0;
+	int sum=0;
+	for(int i=0; i<10;)
+	{
+		sum += i;
+		i=2;
+	}
 }
 """
 parser = c_parser.CParser()
@@ -112,11 +99,11 @@ ast = parser.parse(text)
 #ast.reConstruct()
 ast.show()
 print (ast.NodeNum())
-
-ast_str = []
-ast.toNewickFormat(value=ast_str)
-ast_str = ''.join(ast_str)
-print (ast_str)
+#
+# ast_str = []
+# ast.toNewickFormat(value=ast_str)
+# ast_str = ''.join(ast_str)
+# print (ast_str)
 # visitor = c_ast.NodeVisitor()
 # visitor.visit(ast)
 #ast = GetMajorFunction(ast)

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h> 
 #include <string.h>
+#include "initparams.h"
 #include"FFNN.h"
 #include"activation.h"
 #define sizeofint 4
@@ -11,26 +12,27 @@ char* readline(FILE *input);
 char* settingfile;
 const int nP = 10;
 void ReadNetFromBuf( char *& cursor, FILE *fp);
-void getparameters(char* params[nP])
+var* getparameters()
 {
     FILE *fp;
-    //args_svm_classify_multiclass.txt
-    //args_svm_learn_multiclass.txt
     fp=fopen(settingfile,"r");
     if(fp==NULL)
 	{
 		fprintf(stderr,"can't open file dataset information file\n");
-		exit(1);
+		return NULL;
 	}
-    int i =0;
     char * line;
+    char delims[10] =":";
+    var** varlist =(var**)malloc(sizeof(var*));
 	while((line=readline(fp))!=NULL)
 	{		
         if(line[0]=='/')
             continue; 
-        params[i] = line; i++;
+        var* newvar = getvarfromstring(line, delims);
+		Insert(varlist, newvar);    
 	}
     fclose(fp);
+    return *varlist;
 }
 char* readline(FILE *input)
 {
@@ -183,3 +185,4 @@ void ReadNetFromBuf( char *& cursor, FILE *fp){
 	}
 	return ;
 }
+

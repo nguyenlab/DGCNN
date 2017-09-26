@@ -1,14 +1,11 @@
-# Project: CNN
-# Makefile created by Dev-C++ 5.11
-
 CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
-OBJ      = activation.o FFNN.o global.o main.o predict.o read_data.o file_io.o DESolver.o main_cnn.o main_decnn.o DE_CNN.o test_loadnet.o loss.o
-LINKOBJ  = activation.o FFNN.o global.o main.o predict.o read_data.o file_io.o DESolver.o main_cnn.o main_decnn.o DE_CNN.o test_loadnet.o loss.o
-LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc
-INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/BLAS/CBLAS/include"
-CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++" -I"C:/BLAS/CBLAS/include"
+OBJ      = activation.o FFNN.o global.o main.o predict.o read_data.o file_io.o DESolver.o main_cnn.o main_decnn.o DE_CNN.o test_loadnet.o loss.o initparams.o
+LINKOBJ  = activation.o FFNN.o global.o main.o predict.o read_data.o file_io.o DESolver.o main_cnn.o main_decnn.o DE_CNN.o test_loadnet.o loss.o initparams.o
+LIBS     = -L"C:/Dev-Cpp/MinGW64/lib" -L"C:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc
+INCS     = -I"C:/Dev-Cpp/MinGW64/include" -I"C:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/BLAS/CBLAS/include"
+CXXINCS  = -I"C:/Dev-Cpp/MinGW64/include" -I"C:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++" -I"C:/BLAS/CBLAS/include"
 BIN      = CNN.exe
 CXXFLAGS = $(CXXINCS) 
 CFLAGS   = $(INCS) 
@@ -62,3 +59,6 @@ test_loadnet.o: test_loadnet.cpp
 
 loss.o: loss.cpp
 	$(CPP) -c loss.cpp -o loss.o $(CXXFLAGS)
+
+initparams.o: initparams.cpp
+	$(CPP) -c initparams.cpp -o initparams.o $(CXXFLAGS)

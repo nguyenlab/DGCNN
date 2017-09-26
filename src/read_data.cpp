@@ -205,11 +205,29 @@ void ReadAllData( ){
 	infile = fopen(f_ytrain, "r");
 	if( infile == NULL)
 		cout << "ERROR: cannot load: " << "y_train.txt" << endl;
-
+	
+	classweight = new float[num_label];
+	for (int i=0; i<num_label; i++)
+		classweight[i] = 0.0;
+		
 	for ( int i = 0; i < num_train; ++i){
 		fgets( tmpstring, 100, infile);
 		y_train[i] = atoi(tmpstring);
+		classweight[y_train[i]] +=1;
 	}
+	
+	printf("\n sample ratios: ");
+	int num_min = num_train+1;
+	for (int i=0; i<num_label; i++)
+		if (num_min> classweight[i])
+			num_min =  classweight[i];
+			
+	for (int i=0; i<num_label; i++)
+	{
+		classweight[i] = num_min/classweight[i];
+		printf("%4.2f ",classweight[i]);
+	}
+	printf("\n");
 	fclose(infile);
 	return;
 }

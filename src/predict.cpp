@@ -66,7 +66,7 @@ using namespace std;
 
 }
 */
-float predictCV(int * yCV,int num_CV, FILE * fvec, FILE * fprob, int mode){
+float predictCV(int * yCV,int num_CV, FILE * fvec, FILE * fprob){
 	isTraining = false;
 	
 	
@@ -106,14 +106,14 @@ float predictCV(int * yCV,int num_CV, FILE * fvec, FILE * fprob, int mode){
 		float max_prob = 0.0;
 
 		for(int j = 0; j < num_label; j++){
-			if(mode==modeProb&& fprob !=NULL) // print probalities
+			if(fprob !=NULL) // print probalities
 				fprintf(fprob,"%4f, ", h[j]);
 			if (h[j] > max_prob) {
 				max_prob = h[j];
 				predict = j;
 			}
 		}
-		if(mode==modeProb&& fprob !=NULL)
+		if(fprob !=NULL)
 			fprintf(fprob,"\n");
 
 
@@ -123,9 +123,9 @@ float predictCV(int * yCV,int num_CV, FILE * fvec, FILE * fprob, int mode){
 	//		}
 		if (predict == t)
 			correct += 1;
-		if (fvec !=NULL && mode ==modeLabel)// print labels
-			fprintf(fvec,"%d\n", predict);
-		if (fvec !=NULL && mode ==modeVec)// print vector representation
+//		if (fvec !=NULL && mode ==modeLabel)// print labels
+//			fprintf(fvec,"%d\n", predict);
+		if (fvec !=NULL)// print vector representation
 		{
 			int hidid = len - 2;
 			float * y = Xnet[hidid] -> y;
@@ -150,7 +150,7 @@ float predictCV(int * yCV,int num_CV, FILE * fvec, FILE * fprob, int mode){
 // mode =1, write predicting label
 //int modeProb =0;
 //int modeLabel = 1;
-void predictTest(int * yTest,int num_test, FILE * fvec, FILE * fprob, int mode){
+void predictTest(int * yTest,int num_test, FILE * fvec, FILE * fprob){
 	isTraining = false;
 
 	int correct = 0;
@@ -188,14 +188,14 @@ void predictTest(int * yTest,int num_test, FILE * fvec, FILE * fprob, int mode){
 
 		for(int j = 0; j < num_label; j++){
 			
-			if(mode==modeProb&& fprob !=NULL) // print probalities
+			if(fprob !=NULL) // print probalities
 				fprintf(fprob,"%4f, ", h[j]);
 			if (h[j] > max_prob) {
 				max_prob = h[j];
 				predict = j;
 			}
 		}
-		if(mode==modeProb&& fprob !=NULL)
+		if(fprob !=NULL)
 			fprintf(fprob,"\n");
 
 
@@ -205,9 +205,9 @@ void predictTest(int * yTest,int num_test, FILE * fvec, FILE * fprob, int mode){
 	//		}
 		if (predict == t)
 			correct += 1;
-		if (fvec !=NULL && mode ==modeLabel) // print labels
-			fprintf(fvec,"%d\n", predict);
-		if (fvec !=NULL && mode ==modeVec)// print vector representation
+//		if (fvec !=NULL && mode ==modeLabel) // print labels
+//			fprintf(fvec,"%d\n", predict);
+		if (fvec !=NULL)// print vector representation
 		{
 			int hidid = len - 2;
 			float * y = Xnet[hidid] -> y;
@@ -223,8 +223,8 @@ void predictTest(int * yTest,int num_test, FILE * fvec, FILE * fprob, int mode){
 	cout << "  test-correct    " << (correct + 0.0) / num_test;
 	isTraining = true;
 }
-void predictTrain(int * yTrain,int num_Train, FILE * fvec, int mode){
-	if (mode !=modeVec) return;
+void predictTrain(int * yTrain,int num_Train, FILE * fvec){
+	if (fvec==NULL) return;
 	for (int i = 0;i < num_Train ; ++ i) {
 	
 			ReadTrainNetwork(i,i%2);
@@ -243,7 +243,7 @@ void predictTrain(int * yTrain,int num_Train, FILE * fvec, int mode){
 //			
 			FeedForward(Xnet, len);
 
-			if (fvec !=NULL && mode ==modeVec)// print vector representation
+			if (fvec !=NULL)// print vector representation
 			{
 				int hidid = len - 2;
 				float * y = Xnet[hidid] -> y;

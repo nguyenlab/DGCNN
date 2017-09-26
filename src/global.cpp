@@ -21,7 +21,8 @@ float eta;
 int num_weights, num_biases;
 int num_train, num_CV, num_test;
 
-int num_label = 104;
+int num_label = 0;
+float* classweight; //for weighting error outputs of classes
 
 //pthread_t threads[NUM_THREADS];
 //pthread_mutex_t mutex_param;
@@ -48,7 +49,7 @@ void RandomInitParam(){
 
 void ReadParam(char* filepath){
 	FILE *infile = fopen(filepath, "rb");
-	cout<< "\nLoad parameters from "<< filepath<<flush;
+	cout<< "\nLoad parameters from '"<< filepath<<"'"<<flush;
 
 	if( infile == NULL){
 		cout << "ERR: Can't load parameters; file name : '" << filepath << "'" <<endl;
@@ -81,7 +82,7 @@ void ReadParam(char* filepath){
 //	cout << biases[0]  << " " << biases[1]  << " " << biases[num_biases-1]  << endl;
 	return;
 }
-void ReadParamTBCNN(const char * filepath){
+void ReadNetParams(const char * filepath){
 	FILE *infile = fopen(filepath, "rb");
 
 	if( infile == NULL){
@@ -123,7 +124,7 @@ void SaveParam(const char * filepath){
 	return;
 }
 
-void saveTBCNNParam2(int epoch, float alpha, bool n_miniGDchange)
+void saveNetParams(int epoch, float alpha, bool n_miniGDchange)
 {
 	cout<<"save param epoch = "<<epoch;
 	char s[20];
@@ -145,7 +146,7 @@ void saveTBCNNParam2(int epoch, float alpha, bool n_miniGDchange)
 
 }
 
-void readTBCNNParam2(int epoch,float alpha,bool n_miniGDchange)
+void readNetParams(int epoch,float alpha,bool n_miniGDchange)
 {
 	cout<<"save param epoch = "<<epoch;
 	char s[20];
@@ -163,6 +164,6 @@ void readTBCNNParam2(int epoch,float alpha,bool n_miniGDchange)
 	strw = strw+".txt";
 	cout<<" in  "<<strw<<endl;	
 	const char * fweights = strw.c_str();
-	ReadParamTBCNN(fweights);
+	ReadNetParams(fweights);
 
 }
