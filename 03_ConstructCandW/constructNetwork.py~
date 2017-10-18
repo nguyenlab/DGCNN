@@ -1,0 +1,195 @@
+import sys
+sys.path.append('../nn')
+sys.path.append('../')
+import Layers as Lay, Connections as Con, Activation
+
+##############################
+# hyperparam
+
+
+        
+def ConstructTreeConvolution(nodes, numFea, numCon, numDis, numOut,\
+                        Wleft, Wright, Bconstruct,\
+                        Wconv_root, Wconv_left, Wconv_right, Bconv,\
+                        Wdis, Woutput, Bdis, Boutput,\
+                        poolCutoff
+        ):
+    # nodes
+    # numFea: # of the word/symbol feature size
+    # numCon: # of the convolution size
+    # Wleft:  left  weights of continous binary tree autoencoder
+    # Wright: right weights of continous binary tree autoencoder
+    # Bconstruct: the biase for the autoencoder
+    # Wcomb_ae, Wcomb_orig: the weights for the combination of 
+    #                       autoencoder and the original vector
+    #                       (no biase for this sate)
+    # Wconv_root, Wconv_left, Wconv_right, Bconv: the weights for covolution
+    # Bconv: Biases for covolution
+    
+    numNodes = len(nodes)
+    
+    layers = []
+# construct layers for each node
+    # layers = |---leaf---|
+    numLeaf = 0
+    for idx in xrange(numNodes):
+        node = nodes[idx]
+        if len(node.children) == 0:
+            numLeaf += 1
+            tmplayer = Lay.layer('vec_'+str(idx)+'_' + node.word,\
+                          node.bidx,\
+                          numFea
+                      )
+            tmplayer.act = 'embedding'
+            layers.append(tmplayer)      
+    
+    
+
+
+      
+            
+            
+# auto encoding
+    # layers = |---leaf---|---non_leaf(autoencoded)---| (numNodes)
+    numNonLeaf = numNodes - numLeaf
+
+    layers.extend([None] * ( numNonLeaf))
+
+    for idx in xrange(numLeaf, numNodes): 
+        node = nodes[idx]
+        #layers[ idx + numNonLeaf ] = layers [idx]
+      
+        tmplayer = Lay.layer('ae_'+str(idx)+'_'+node.word,\
+                    Bconstruct[0], numFea)
+        layers[idx] = tmplayer
+
+
+    # add reconstruction connections
+    for idx in xrange(0, numNodes):
+        node = nodes[idx]
+        if node.parent == None:
+            continue
+        tmplayer = layers[idx]
+        parent = layers[ node.parent ]
+        if node.leftRate != 0:
+            Con.connection(tmplayer, parent,\
+                             numFea, numFea, Wleft[0], Wcoef = node.leftRate * node.leafNum/nodes[node.parent].leafNum)
+	          
+        if node.rightRate != 0:
+            Con.connection(tmplayer, parent,\
+                             numFea, numFea, Wright[0], Wcoef = node.rightRate * node.leafNum/nodes[node.parent].leafNum)
+
+ 
+    queue = [ (numNodes-1, None) ]
+    
+    poolTop = Lay.PoolLayer('poolTop', numCon)
+    poolLeft = Lay.PoolLayer('poolLeft', numCon)
+    poolRight = Lay.PoolLayer('poolRight', numCon)
+    
+    layerCnt = 0
+    rootChildrenNum = len(nodes[-1].children) - 1
+    
+    while True:      
+        curLen = len(queue)        
+        #layerCnt.append( curLen )
+        
+        if curLen == 0:
+            break
+        nextQueue = []    
+        
+        for (nodeidx, info) in queue: 
+            curLayer = layers[nodeidx]
+            curNode  = nodes[nodeidx]
+            
+            conLayer = Lay.layer('Convolve_' + curLayer.name, \
+                             Bconv[0], numCon)
+	    conLayer.act = 'dropout'
+            layers.append(conLayer)
+            # add root connection
+            
+            Con.connection(curLayer, conLayer, numFea, numCon, Wconv_root[0])
+            
+            childNum = len(curNode.children)
+            #print curLayer.name, info
+            # pooling
+            if layerCnt < poolCutoff:
+                Con.PoolConnection( conLayer, poolTop)
+            else: # TODO if layerCnt >= poolCutoff
+                if info == 'l' or info == 'lr':
+                    Con.PoolConnection( conLayer, poolLeft)
+                if info == 'r' or info == 'lr':
+                    Con.PoolConnection( conLayer, poolRight)
+            
+            # for each child of the current node
+                
+            for child in curNode.children: 
+                childNode = nodes[child]
+                childLayer = layers[child]
+                 
+                if layerCnt != 0 and info != 'u':
+                    childinfo = info                    
+                else:
+                    if rootChildrenNum == 1 and info == 'u':
+                        childinfo = 'u'
+                    if childNode.pos <= rootChildrenNum/2.0: 
+                        childinfo = 'l'
+                    else:# childNode.pos > rootChildrenNum/2.0:
+                        childinfo = 'r'
+                    #else:
+                    #    childinfo = 'lr'
+                nextQueue.append( (child, childinfo) ) # add to child
+                if childNum == 1:
+                    leftWeight = .5
+                    rightWeight = .5
+                else:
+                    rightWeight = childNode.pos / (childNum - 1.0 ) 
+                    leftWeight = 1 - rightWeight 
+                if leftWeight != 0:
+                    Con.connection(childLayer, conLayer,\
+                                             numFea, numCon, Wconv_left[0], leftWeight)
+                if rightWeight != 0:
+                    Con.connection(childLayer, conLayer,\
+                                              numFea, numCon, Wconv_right[0], rightWeight)
+            # end of each child of the current node
+            queue = nextQueue
+            
+        layerCnt += 1
+        # end of current layer
+
+    layers.append(poolTop)
+    layers.append(poolLeft)
+    layers.append(poolRight)
+    
+
+    numPool = 3
+    lenlayer = len(layers)
+    conbegin = lenlayer - numPool
+    
+    discriminative = Lay.layer( 'discriminative', Bdis[0], numDis)
+    discriminative.act = 'dropout'
+    output = Lay.layer('outputlayer', Boutput[0], numOut)
+    #One Weight Size
+    ows = numDis * numCon
+    for idx in xrange( numPool ):
+        poollayer = layers[idx + conbegin]
+        Con.connection( poollayer, discriminative, numCon, numDis, Wdis[idx*ows])
+        
+    Con.connection(discriminative, output, numDis, numOut, Woutput[0])
+    if numOut > 1:
+        output._activate = Activation.softmax
+        output._activatePrime = None
+        output.act = 'softmax'
+    else:
+        output._activate = Activation.dummySigmoid
+        output._activatePrime = Activation.dummySigmoidPrime
+    layers.append(discriminative)
+    layers.append(output)
+    
+# add successive connections
+    numlayers = len(layers)
+    for idx in xrange( numlayers ):
+        if idx > 0:
+            layers[idx].successiveLower = layers[idx-1]
+        if idx < numlayers - 1:
+            layers[idx].successiveUpper = layers[idx+1]
+    return layers

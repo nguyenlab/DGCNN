@@ -1,0 +1,39 @@
+Data structure specifications
+
+#############################
+# Parameters:
+
+| # weights |          float
+| # biases  |          float
+| weights     |        float * # weights
+| biases      |        float * # biases
+
+
+#############################
+# One data sample:
+
+| # layers      |      int
+| # connections |      int
+
+for each layer:               x (# layers)
+	
+	//  |   name   |      char []
+	| numUnit    |    int
+	| numUp      |    int
+	| numDown    |    int
+
+	| activation |    char 'x'=max pooling, 'u'=sum pooling, 's'=softmax, 'r'=ReLU， ‘e’=embeddings
+	
+	if activation != Pool:
+		
+		| bidx       |    int
+
+for each connection:             x (# connections)
+	| xid   |            int
+	| yid   |            int
+	| xupid |            int
+	| ydownid|           int
+	| Widx  |            int
+	
+	if not pooling:
+		| Wcoef |            float

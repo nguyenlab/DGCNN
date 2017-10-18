@@ -1,0 +1,574 @@
+batch = 50; C_weights = 1; learn_rate = 1; learn_rate decay0.6
+531500 41879205
+INFO: Data loaded
+/home/seke/Workspace/Sentiment/xy/network_train_large0
+Epoch = 0; Training J = 0
+    0.253406    0.231222
+===========
+Epoch = 0; Training J = 1.32173
+    0.210718    0.181448
+===========
+Epoch = 0; Training J = 1.27114
+    0.300636    0.256561
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large1
+Epoch = 0; Training J = 0
+    0.342416    0.330317
+===========
+Epoch = 0; Training J = 1.07255
+    0.402361    0.38009
+===========
+Epoch = 0; Training J = 1.06212
+    0.419619    0.392308
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large2
+Epoch = 0; Training J = 0
+    0.39782    0.370588
+===========
+Epoch = 0; Training J = 1.00046
+    0.437784    0.406335
+===========
+Epoch = 0; Training J = 1.00401
+    0.406903    0.377376
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large3
+Epoch = 0; Training J = 0
+    0.419619    0.39095
+===========
+Epoch = 0; Training J = 0.982133
+    0.425976    0.429864
+===========
+Epoch = 0; Training J = 0.97459
+    0.417802    0.409502
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large4
+Epoch = 0; Training J = 0
+    0.404178    0.388688
+===========
+Epoch = 0; Training J = 0.965456
+    0.423252    0.442534
+===========
+Epoch = 0; Training J = 0.941519
+    0.436876    0.444796
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large5
+Epoch = 0; Training J = 0
+    0.441417    0.451131
+===========
+Epoch = 0; Training J = 0.928443
+    0.380563    0.394118
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large0
+Epoch = 1; Training J = 0
+    0.399637    0.41991
+===========
+Epoch = 1; Training J = 0.918684
+    0.442325    0.432579
+===========
+Epoch = 1; Training J = 0.910247
+    0.435059    0.412217
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large1
+Epoch = 1; Training J = 0
+    0.44505    0.443891
+===========
+Epoch = 1; Training J = 0.875264
+    0.438692    0.458371
+===========
+Epoch = 1; Training J = 0.878851
+    0.449591    0.444344
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large2
+Epoch = 1; Training J = 0
+    0.453224    0.445701
+===========
+Epoch = 1; Training J = 0.864155
+    0.4505    0.466063
+===========
+Epoch = 1; Training J = 0.867441
+    0.447775    0.441176
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large3
+Epoch = 1; Training J = 0
+    0.410536    0.399548
+===========
+Epoch = 1; Training J = 0.862405
+    0.448683    0.467873
+===========
+Epoch = 1; Training J = 0.854498
+    0.451408    0.443439
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large4
+Epoch = 1; Training J = 0
+    0.421435    0.426697
+===========
+Epoch = 1; Training J = 0.853369
+    0.428701    0.432579
+===========
+Epoch = 1; Training J = 0.833755
+    0.449591    0.455204
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large5
+Epoch = 1; Training J = 0
+    0.451408    0.461086
+===========
+Epoch = 1; Training J = 0.832136
+    0.436876    0.452036
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large0
+Epoch = 2; Training J = 0
+    0.417802    0.434842
+===========
+Epoch = 2; Training J = 0.84302
+    0.441417    0.460633
+===========
+Epoch = 2; Training J = 0.837526
+    0.455949    0.434842
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large1
+Epoch = 2; Training J = 0
+    0.459582    0.454751
+===========
+Epoch = 2; Training J = 0.805564
+    0.442325    0.457919
+===========
+Epoch = 2; Training J = 0.811698
+    0.4505    0.456561
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large2
+Epoch = 2; Training J = 0
+    0.452316    0.454299
+===========
+Epoch = 2; Training J = 0.800269
+    0.454133    0.463801
+===========
+Epoch = 2; Training J = 0.800334
+    0.44505    0.441176
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large3
+Epoch = 2; Training J = 0
+    0.432334    0.427602
+===========
+Epoch = 2; Training J = 0.794072
+    0.446866    0.460633
+===========
+Epoch = 2; Training J = 0.78768
+    0.442325    0.455204
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large4
+Epoch = 2; Training J = 0
+    0.417802    0.440271
+===========
+Epoch = 2; Training J = 0.780517
+    0.432334    0.439367
+===========
+Epoch = 2; Training J = 0.763596
+    0.428701    0.466063
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large5
+Epoch = 2; Training J = 0
+    0.445958    0.461086
+===========
+Epoch = 2; Training J = 0.762772
+    0.445958    0.455204
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large0
+Epoch = 3; Training J = 0
+    0.419619    0.442534
+===========
+Epoch = 3; Training J = 0.794634
+    0.442325    0.463801
+===========
+Epoch = 3; Training J = 0.789404
+    0.442325    0.440271
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large1
+Epoch = 3; Training J = 0
+    0.443233    0.449321
+===========
+Epoch = 3; Training J = 0.760268
+    0.440509    0.452489
+===========
+Epoch = 3; Training J = 0.765429
+    0.443233    0.454299
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large2
+Epoch = 3; Training J = 0
+    0.4505    0.449321
+===========
+Epoch = 3; Training J = 0.753226
+    0.451408    0.467873
+===========
+Epoch = 3; Training J = 0.751549
+    0.430518    0.452489
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large3
+Epoch = 3; Training J = 0
+    0.432334    0.440724
+===========
+Epoch = 3; Training J = 0.744205
+    0.444142    0.462896
+===========
+Epoch = 3; Training J = 0.737572
+    0.444142    0.460181
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large4
+Epoch = 3; Training J = 0
+    0.417802    0.444796
+===========
+Epoch = 3; Training J = 0.725701
+    0.421435    0.436652
+===========
+Epoch = 3; Training J = 0.710381
+    0.449591    0.460181
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large5
+Epoch = 3; Training J = 0
+    0.442325    0.461991
+===========
+Epoch = 3; Training J = 0.708753
+    0.445958    0.448416
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large0
+Epoch = 4; Training J = 0
+    0.433243    0.449774
+===========
+Epoch = 4; Training J = 0.755806
+    0.449591    0.461086
+===========
+Epoch = 4; Training J = 0.751099
+    0.453224    0.451131
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large1
+Epoch = 4; Training J = 0
+    0.442325    0.451131
+===========
+Epoch = 4; Training J = 0.725297
+    0.440509    0.451584
+===========
+Epoch = 4; Training J = 0.729929
+    0.4396    0.458371
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large2
+Epoch = 4; Training J = 0
+    0.446866    0.451131
+===========
+Epoch = 4; Training J = 0.715401
+    0.442325    0.471493
+===========
+Epoch = 4; Training J = 0.713218
+    0.431426    0.463348
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large3
+Epoch = 4; Training J = 0
+    0.433243    0.449774
+===========
+Epoch = 4; Training J = 0.705734
+    0.44505    0.469683
+===========
+Epoch = 4; Training J = 0.697927
+    0.435967    0.461538
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large4
+Epoch = 4; Training J = 0
+    0.415985    0.447059
+===========
+Epoch = 4; Training J = 0.683464
+    0.426885    0.443891
+===========
+Epoch = 4; Training J = 0.667463
+    0.437784    0.450679
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large5
+Epoch = 4; Training J = 0
+    0.437784    0.454751
+===========
+Epoch = 4; Training J = 0.663165
+    0.434151    0.452941
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large0
+Epoch = 5; Training J = 0
+    0.430518    0.455204
+===========
+Epoch = 5; Training J = 0.72416
+    0.441417    0.453846
+===========
+Epoch = 5; Training J = 0.720575
+    0.446866    0.451584
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large1
+Epoch = 5; Training J = 0
+    0.44505    0.457919
+===========
+Epoch = 5; Training J = 0.696382
+    0.436876    0.447059
+===========
+Epoch = 5; Training J = 0.700307
+    0.442325    0.459729
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large2
+Epoch = 5; Training J = 0
+    0.4396    0.451131
+===========
+Epoch = 5; Training J = 0.686716
+    0.444142    0.467873
+===========
+Epoch = 5; Training J = 0.683795
+    0.433243    0.457919
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large3
+Epoch = 5; Training J = 0
+    0.433243    0.447511
+===========
+Epoch = 5; Training J = 0.674855
+    0.442325    0.469683
+===========
+Epoch = 5; Training J = 0.665765
+    0.430518    0.455656
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large4
+Epoch = 5; Training J = 0
+    0.419619    0.455656
+===========
+Epoch = 5; Training J = 0.650387
+    0.421435    0.448869
+===========
+Epoch = 5; Training J = 0.63419
+    0.433243    0.447511
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large5
+Epoch = 5; Training J = 0
+    0.420527    0.458824
+===========
+Epoch = 5; Training J = 0.627998
+    0.425976    0.452036
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large0
+Epoch = 6; Training J = 0
+    0.426885    0.455204
+===========
+Epoch = 6; Training J = 0.699128
+    0.435967    0.455204
+===========
+Epoch = 6; Training J = 0.696584
+    0.436876    0.449774
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large1
+Epoch = 6; Training J = 0
+    0.449591    0.457919
+===========
+Epoch = 6; Training J = 0.674053
+    0.434151    0.447511
+===========
+Epoch = 6; Training J = 0.677229
+    0.440509    0.451584
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large2
+Epoch = 6; Training J = 0
+    0.436876    0.456561
+===========
+Epoch = 6; Training J = 0.66464
+    0.438692    0.464253
+===========
+Epoch = 6; Training J = 0.661665
+    0.423252    0.459729
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large3
+Epoch = 6; Training J = 0
+    0.436876    0.449321
+===========
+Epoch = 6; Training J = 0.65231
+    0.444142    0.468326
+===========
+Epoch = 6; Training J = 0.642402
+    0.430518    0.451131
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large4
+Epoch = 6; Training J = 0
+    0.419619    0.458371
+===========
+Epoch = 6; Training J = 0.62628
+    0.426885    0.446154
+===========
+Epoch = 6; Training J = 0.610086
+    0.430518    0.450226
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large5
+Epoch = 6; Training J = 0
+    0.420527    0.456109
+===========
+Epoch = 6; Training J = 0.602594
+    0.425068    0.454751
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large0
+Epoch = 7; Training J = 0
+    0.419619    0.448869
+===========
+Epoch = 7; Training J = 0.680632
+    0.428701    0.456109
+===========
+Epoch = 7; Training J = 0.679215
+    0.425068    0.451584
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large1
+Epoch = 7; Training J = 0
+    0.440509    0.461991
+===========
+Epoch = 7; Training J = 0.657965
+    0.435967    0.456561
+===========
+Epoch = 7; Training J = 0.660579
+    0.4396    0.450226
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large2
+Epoch = 7; Training J = 0
+    0.438692    0.459276
+===========
+Epoch = 7; Training J = 0.648417
+    0.434151    0.461086
+===========
+Epoch = 7; Training J = 0.645539
+    0.423252    0.459729
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large3
+Epoch = 7; Training J = 0
+    0.438692    0.448869
+===========
+Epoch = 7; Training J = 0.636357
+    0.432334    0.467421
+===========
+Epoch = 7; Training J = 0.626026
+    0.430518    0.451584
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large4
+Epoch = 7; Training J = 0
+    0.416894    0.461086
+===========
+Epoch = 7; Training J = 0.609803
+    0.428701    0.452036
+===========
+Epoch = 7; Training J = 0.593682
+    0.429609    0.453846
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large5
+Epoch = 7; Training J = 0
+    0.420527    0.452941
+===========
+Epoch = 7; Training J = 0.58553
+    0.420527    0.450226
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large0
+Epoch = 8; Training J = 0
+    0.42416    0.452489
+===========
+Epoch = 8; Training J = 0.667556
+    0.425068    0.455204
+===========
+Epoch = 8; Training J = 0.666812
+    0.425976    0.451584
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large1
+Epoch = 8; Training J = 0
+    0.435967    0.460633
+===========
+Epoch = 8; Training J = 0.646807
+    0.430518    0.458371
+===========
+Epoch = 8; Training J = 0.649079
+    0.436876    0.453846
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large2
+Epoch = 8; Training J = 0
+    0.4396    0.458371
+===========
+Epoch = 8; Training J = 0.636726
+    0.435059    0.461538
+===========
+Epoch = 8; Training J = 0.634099
+    0.423252    0.459729
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large3
+Epoch = 8; Training J = 0
+    0.438692    0.452489
+===========
+Epoch = 8; Training J = 0.625916
+    0.430518    0.463348
+===========
+Epoch = 8; Training J = 0.615123
+    0.425068    0.453394
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large4
+Epoch = 8; Training J = 0
+    0.421435    0.459729
+===========
+Epoch = 8; Training J = 0.598271
+    0.426885    0.450226
+===========
+Epoch = 8; Training J = 0.582455
+    0.425068    0.454751
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large5
+Epoch = 8; Training J = 0
+    0.41871    0.454299
+===========
+Epoch = 8; Training J = 0.573348
+    0.421435    0.453846
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large0
+Epoch = 9; Training J = 0
+    0.423252    0.452489
+===========
+Epoch = 9; Training J = 0.658782
+    0.425976    0.447964
+===========
+Epoch = 9; Training J = 0.658243
+    0.421435    0.451584
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large1
+Epoch = 9; Training J = 0
+    0.4396    0.456561
+===========
+Epoch = 9; Training J = 0.639059
+    0.433243    0.458824
+===========
+Epoch = 9; Training J = 0.641305
+    0.433243    0.456109
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large2
+Epoch = 9; Training J = 0
+    0.436876    0.455656
+===========
+Epoch = 9; Training J = 0.628475
+    0.435967    0.461086
+===========
+Epoch = 9; Training J = 0.62618
+    0.428701    0.462443
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large3
+Epoch = 9; Training J = 0
+    0.444142    0.450226
+===========
+Epoch = 9; Training J = 0.618713
+    0.429609    0.459276
+===========
+Epoch = 9; Training J = 0.607658
+    0.425068    0.453846
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large4
+Epoch = 9; Training J = 0
+    0.425068    0.458824
+===========
+Epoch = 9; Training J = 0.590152
+    0.425976    0.452036
+===========
+Epoch = 9; Training J = 0.574758
+    0.428701    0.457919
+===========
+/home/seke/Workspace/Sentiment/xy/network_train_large5
+Epoch = 9; Training J = 0
+    0.423252    0.457014
+===========
+Epoch = 9; Training J = 0.565327
+    0.420527    0.450226
+===========
+done

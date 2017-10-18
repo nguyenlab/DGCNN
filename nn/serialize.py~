@@ -1,0 +1,100 @@
+import numpy as np
+import sys
+import cPickle as p
+sys.path.append('../')
+import gl, FFNN
+import InitParam as init
+import copy, Activation as act
+import struct
+def serialize(layers, fname):
+    
+    f = file( fname, 'wb' )
+    num_lay = struct.pack('i', len(layers) )
+    f.write( num_lay)
+    
+    num_con = 0
+    
+    #################################
+    # preprocessing, compute some indexes
+    for i, layer in enumerate(layers):
+        layer.idx = i
+        num_con += len(layer.connectUp )
+        for (icon, con) in enumerate(layer.connectDown):
+            con.ydownid = icon
+            
+    num_con = struct.pack('i', num_con )
+    f.write( num_con )
+    
+    #################################
+    # layers
+
+    for layer in layers:
+        # name
+        # = struct.pack('s', layer.name )
+        # numUnit        
+        tmp = struct.pack('i', layer.numUnit )
+        f.write( tmp )
+        # numUp
+        tmp = struct.pack('i', len(layer.connectUp))
+        f.write( tmp )
+        # numDown
+        tmp = struct.pack('i', len(layer.connectDown))
+        f.write( tmp )
+        
+        
+        if  layer.layer_type == 'p': # pooling
+            if layer.poolType == 'max':
+                tlayer = 'x'
+            elif layer.poolType == 'sum':
+                tlayer = 'u'
+            tmp = struct.pack('c', tlayer)
+            f.write( tmp )
+            
+        elif layer.layer_type == 'o': # ordinary nodes
+            print layer.act
+            if layer.act == 'embedding':
+                tlayer = 'e'
+            elif layer.act == "ReLU":
+                tlayer = 'r'
+            elif layer.act == 'softmax':
+                print "here"
+                tlayer = 's'
+            else:
+                return layer
+            try:
+                print tlayer
+                tmp = struct.pack('c', tlayer)
+            except:
+                print layer._activate
+            f.write( tmp )
+            bidx = -1
+            if layer.bidx != None:
+                bidx = layer.bidx[0]
+            tmp = struct.pack('i', bidx)
+            f.write(tmp)
+    #########################
+    # connections
+    for layer in layers:
+        for xupid, con in enumerate(layer.connectUp):
+            # xlayer idx   
+            tmp = struct.pack('i', layer.idx)
+            f.write( tmp )
+            # ylayer idx
+            tmp = struct.pack('i', con.ylayer.idx )
+            f.write( tmp)
+            # idx in x's connectUp 
+            tmp = struct.pack('i', xupid)
+            f.write( tmp )
+            # idx in y's connectDown
+            tmp = struct.pack('i', con.ydownid)
+            f.write( tmp )
+            if con.ylayer.layer_type == 'p':
+                Widx = -1
+            else:
+                Widx = con.Widx[0]
+            tmp = struct.pack('i', Widx)
+            f.write(tmp)
+            if Widx >= 0:
+                tmp = struct.pack('f', con.Wcoef)
+                f.write( tmp )
+    f.close()
