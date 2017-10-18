@@ -213,7 +213,24 @@ def testAST_GraphNet():
             else:
                 print "        ", c.xlayer.name, " -> ", '|', \
                     '(xnum= ', c.xnum, ', ynum= ', c.ynum, ')'
+def testAST_Graph():
+    text ='''
+ int main(int x1, int x2, int x3, int x4, int x5)
+ {
+    int x = y + 3 + 3;
+ }
+    '''
+    parser = pycparser.c_parser.CParser()
+    ast = parser.parse(text=text)  # Parse code to AST
+    ast.show()
+    if gl.reConstruct:  # reconstruct braches of For, While, DoWhile
+        ast.reConstruct()
+    g =tree2Graph(ast)
+
+    print 'Max Degree', g.maxDegree()
+
 if __name__ == '__main__':
-    testAST_GraphNet()
+    # testAST_GraphNet()
+    testAST_Graph()
     print 'Done'
 

@@ -276,6 +276,37 @@ def saveXYForKFold(K=5, datapath='', xypath=''):
         f_x.close()
         f_y.close()
 
+def saveXYForKFoldTrainCVTest(K=5, datapath='', xypath=''):
+    print 'datapath:', datapath
+    print 'xypath:', xypath
+    for idx in range(1, K+1):
+        f_x = open(xypath+ 'Fold'+str(idx)+'_Xtrain','wb')
+        f_y = open(xypath+ 'Fold'+str(idx)+'_Ytrain.txt','w')
+        numtrain = constructNetFromJson(datapath+'Fold'+str(idx)+'_cfg_train', f_x=f_x, f_y = f_y)
+        f_x.close()
+        f_y.close()
+
+        f_x = open(xypath + 'Fold' + str(idx) + '_XCV', 'wb')
+        f_y = open(xypath + 'Fold' + str(idx) + '_YCV.txt', 'w')
+        numCV = constructNetFromJson(datapath + 'Fold' + str(idx) + '_cfg_CV', f_x=f_x, f_y=f_y)
+        f_x.close()
+        f_y.close()
+
+        f_x = open(xypath + 'Fold' + str(idx) + '_Xtest', 'wb')
+        f_y = open(xypath + 'Fold' + str(idx) + '_Ytest.txt', 'w')
+        numtest = constructNetFromJson(datapath + 'Fold' + str(idx) + '_cfg_test', f_x=f_x, f_y=f_y)
+        f_x.close()
+        f_y.close()
+        # write setting file
+        commonFunctions.generateSettingContent(xypath + '../settings_Fold'+str(idx)+'.txt',
+                                               {'numtrain': numtrain, 'numcv': numCV, 'numtest': numtest, 'output': numOut,
+                                                'paramFile': paramFile, 'xtrain': 'Fold'+str(idx)+'_Xtrain', 'xcv': 'Fold'+str(idx)+'_XCV',
+                                                'xtest': 'Fold'+str(idx)+'_Xtest',
+                                                'ytrain': 'Fold'+str(idx)+'_Ytrain.txt', 'ycv': 'Fold'+str(idx)+'_YCV.txt',
+                                                'ytest': 'Fold'+str(idx)+'_Ytest.txt', 'database': 'F'+str(idx)})
+        f_x.close()
+        f_y.close()
+
 if __name__ == "__main__":
     # tokenvec.txt and toktypeDict.txt must be put in the data directory
     # Write X, Y for CodeChef Problem
@@ -283,11 +314,13 @@ if __name__ == "__main__":
     # if common_params.reConstruct:
     #     word_dict['While'] = word_dict['DoWhile'] = word_dict['For']
     # # print word_dict
-    problem = 'MNMX' # SUMTRIAN, FLOW016, MNMX, SUBINC
-    CodeChefExperiment(problem=problem)
+    problems = ['SUMTRIAN', 'FLOW016', 'MNMX', 'SUBINC']
+    for pro in problems:
+        CodeChefExperiment(problem=pro)
 
     # Write graph data for K Fold
     # GraphJsonKFold(K=5, path=datapath)
     # Write X, Y for Virus Problem
     # saveXYForKFold(K=5, datapath=datapath, xypath = params.xypath)
+    # saveXYForKFoldTrainCVTest(K=5, datapath=datapath, xypath = params.xypath)
     print 'Done!!'

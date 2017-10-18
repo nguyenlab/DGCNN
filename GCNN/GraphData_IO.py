@@ -238,12 +238,12 @@ def splitJson(jsonFile='', fold = 2):
             json.dump(foldObjs, f)
 def jsonGraphStatistics(jsonFiles, out):
     f = open(out,'w')
-    f.write('Vertex, edges\n')
+    f.write('Vertex, edges, max degree(In+Out)\n')
     instanceCount ={}
     for onefile in jsonFiles:
         graphs = readGraphFromJson(jsonFile=onefile)
         for g in graphs:
-            f.write(str(len(g.Vs))+','+ str(len(g.Es))+'\n')
+            f.write(str(len(g.Vs))+','+ str(len(g.Es))+','+ str(g.maxDegree())+'\n')
             if g.label not in instanceCount:
                 instanceCount[g.label] =0
             instanceCount[g.label] += 1
@@ -318,9 +318,16 @@ def modifyGraphVertices(jsonFiles, out):
 
 if __name__ == "__main__":
     #statistic CodeChef data
-    # datapath = '/home/s1520015/Experiment/CodeChef/OriginalTrees/'
-    # problem ='SUMTRIAN'
-    # jsonGraphStatistics([datapath+ problem+ '_AstGraph.json'], datapath+'../'+ problem+'graph_statistic' )
+    datapath = '/home/s1520015/Experiment/CodeChef/OriginalTrees/'
+    problem ='SUMTRIAN'
+    jsonGraphStatistics([datapath+ problem+ '_AstGraph.json'], datapath+'../'+ problem+'graph_statistic' )
+    problem ='MNMX'
+    jsonGraphStatistics([datapath+ problem+ '_AstGraph.json'], datapath+'../'+ problem+'graph_statistic' )
+    problem ='FLOW016'
+    jsonGraphStatistics([datapath+ problem+ '_AstGraph.json'], datapath+'../'+ problem+'graph_statistic' )
+    problem ='SUBINC'
+    jsonGraphStatistics([datapath+ problem+ '_AstGraph.json'], datapath+'../'+ problem+'graph_statistic' )
+
     # splitJson('Z:/Experiment/CodeChef/OriginalTrees/SUMTRIAN_train_AstGraph.json',2)
     # path ='C:/Users/anhpv/Desktop/CFG/Experiment/5Folds/Fold1/Virus/'
     # fold ='Training/'
@@ -331,13 +338,15 @@ if __name__ == "__main__":
     # writeGraph2Json(datapath+name+'/', datapath+name+'.json')
 
     # write token vectors
-    # print 'Create Tokeen Vecs'
+    # # print 'Create Token Vecs'
     datapath = '/home/s1520015/Experiment/5Folds/'
     datafiles=[]
     for idx in range(1,6):
         datafiles.append(datapath+'/Fold'+str(idx)+'/dataFold'+str(idx))
-    # createTokenVecs(datafiles= datafiles,out=datapath+'instruction_vec.txt', vecsize=30, statistic_out=datapath+'statistics.txt')
-    # modifyGraphVertices(datafiles, datapath+'listoftokens.txt')
+
+    jsonGraphStatistics(datafiles, datapath + '/graph_statistic')
+    # # createTokenVecs(datafiles= datafiles,out=datapath+'instruction_vec.txt', vecsize=30, statistic_out=datapath+'statistics.txt')
+    # # modifyGraphVertices(datafiles, datapath+'listoftokens.txt')
     # getListofTokens(datafiles, datapath+'dict_instruction_no_ops.txt',withOps= False)
     # getListofTokens(datafiles, datapath+'dict_instruction_ops.txt',withOps= True)
 
@@ -376,3 +385,12 @@ if __name__ == "__main__":
     #     g.show()
     # path = 'C:/Users/anhpv/Desktop/CFG/'
     # g = getGraph(path + 'check1.dot')
+
+    # print 'Create Tokeen Vecs'
+    # datapath = '/home/s1520015/Experiment/ASMCFG/SourceCode/5Folds/CFG/'
+    # datafiles = []
+    # datafiles.extend([datapath+'Fold1_cfg_train.txt',datapath+'Fold1_cfg_CV.txt',datapath+'Fold1_cfg_test.txt'])
+    # # createTokenVecs(datafiles= datafiles,out=datapath+'instruction_vec.txt', vecsize=30, statistic_out=datapath+'statistics.txt')
+    # # modifyGraphVertices(datafiles, datapath+'listoftokens.txt')
+    # getListofTokens(datafiles, datapath + 'dict_instruction_no_ops.txt', withOps=False)
+    # getListofTokens(datafiles, datapath + 'dict_instruction_ops.txt', withOps=True)

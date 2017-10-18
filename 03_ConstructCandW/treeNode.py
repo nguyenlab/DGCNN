@@ -36,7 +36,6 @@ class Node:
             child.toString(strValue = strValue, delimitor=delimitor)
             strValue.append(d2)
 def LoadTree(filename=None): # stanford parse tree format
-    #filename = 'D:/graphs.txt'
     reader = open(filename, 'r')
 
     nodes = {}

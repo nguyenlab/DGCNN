@@ -39,7 +39,7 @@ encounterNAN = False
 numFea = 30#200
 numCon = 600 # 50
 numDis = 600 # 50
-numOut = 2
+numOut = 5
 #numWords = 209392 #400000#209392#100232# 209392
 numPool = 3
 

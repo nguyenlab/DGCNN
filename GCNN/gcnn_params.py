@@ -3,27 +3,30 @@ import random
 
 import GraphData_IO
 
-datapath ='/home/s1520015/Experiment/CodeChef/'
-xypath = '/home/s1520015/Experiment/CodeChef/MNMX/xy/'
+# datapath ='/home/s1520015/Experiment/CodeChef/OriginalTrees/'
+# xypath = '/home/s1520015/Experiment/CodeChef_Test/GCNN_1V/xy/'
 # datapath ='/home/s1520015/Experiment/5Folds/'
 # xypath = '/home/s1520015/Experiment/GCNN_NoOps/2V/xy/'
-experiment = 'Virus' # Virus or CodeChef
+
+datapath ='/home/s1520015/Experiment/ASMCFG/Nets/'
+xypath = '/home/s1520015/Experiment/ASMCFG/Nets/GCNN_NoOps/2V/xy/'
+
+experiment = 'CFG' # CFG or AST
 withOps = False # contain operands in assembly instructions
 tokvecFile ='tokvec.txt'    # vector representation
 toktype ='dict_tokType.txt' # mapping token ---> type of token
-
+reCreate = False # recreate vec embedding
 numDis = 600
-numOut = 2
+numOut = 5
 
-numView =1
+numView =2
 numCon =[100,600]
 
 # Create vector for tokens
-if experiment =='Virus':
+if experiment =='CFG':
     # input: vec_instruction.txt,
     #         vec_tokType.txt
     #output: tokvec
-    reCreate = False
     if withOps:
         tokvecFile='vec_embedding_ops.txt'
         print 'mode = Not ignore ops'

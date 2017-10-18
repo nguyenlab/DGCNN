@@ -1,3 +1,4 @@
+import codecs
 import sys
 sys.path.append('../pycparser')
 sys.path.append('../')
@@ -7,17 +8,16 @@ from pycparser import c_parser
 import json
 import os
 import numpy as np
-import gl
 
 import gcnn_params as params
-import common_params
 from TreeData_IO import tree2Graph
 from main_statistic import AST_Statistics
 
-problem ='SUMTRIAN' # FLOW016,  MNMX, SUBINC, SUMTRIAN
-datapath = params.datapath # 'Z:/Experiment/CodeChef/'
+problem ='SUBINC' # FLOW016,  MNMX, SUBINC, SUMTRIAN
+datapath  ='/home/s1520015/Experiment/CodeChef/'#params.datapath # 'Z:/Experiment/CodeChef/'
 astjson ='_AST.json'
 graphjson ='_AstGraph.json'
+codejson ='_Code.json'
 randomseed = 314159
 
 labels_dict ={}
@@ -28,6 +28,7 @@ labels_dict['clock_error.png'] = 3 #
 labels_dict['runtime-error.png'] = 4 #
 parser = c_parser.CParser()
 def getSourceCode(loc): # lines of code
+    # preprovessing: remove comments before parsing into AST
     code =''
     m_comment=[]
     for line in loc:
@@ -56,11 +57,14 @@ def getSourceCode(loc): # lines of code
         code += '\n' + line
     return code
 def loadjSonCode(datafile, outerror):
-
+    # read one json file of source code
+    # parse to AST
+    # return AST, Source Code
     with open(datafile, 'r') as infile:
         json_Objs = json.load(infile)
 
     data =[]
+    source =[]
     for obj in json_Objs:
         lang, code, label = obj['lang'],obj['code'], obj['check_box']
         idx = label.rfind('/')
@@ -88,6 +92,8 @@ def loadjSonCode(datafile, outerror):
             # ast.show()
             data.append((label, ast))
 
+            text = '\n'.join(code)
+            source.append((label, text))
             # common_params.ignoreDecl = False  # prune declaration branches
             # common_params.reConstruct = False  # rename While, DoWhile, For ==> Loop
         except Exception as ex:
@@ -100,17 +106,21 @@ def loadjSonCode(datafile, outerror):
     # common_params.ignoreDecl = True  # prune declaration branches
     # common_params.reConstruct = True  # rename While, DoWhile, For ==> Loop
     # data[0][1].show()
-    return data
+    return data, source
 def ReadData():
+    # read all source code in a directory
+    # parse to AST
+    # Save CFG, AST, SourceCode
     outerror = open(datapath+problem+'error.txt','w')
     ast_data =[]
+    sourcecode_data =[]
     count =0
     for onefile in os.listdir(datapath + problem+'/'):
         codefile = datapath + problem+'/'+onefile
-        onefile_data = loadjSonCode(codefile, outerror)
+        onefile_ast, onefile_code = loadjSonCode(codefile, outerror)
         # onefile_data[0][1].show()
-        ast_data.extend(onefile_data)
-
+        ast_data.extend(onefile_ast)
+        sourcecode_data.extend(onefile_code)
         count +=1
         # if count>10:
         #     break
@@ -136,6 +146,13 @@ def ReadData():
     # write statistics
     asts = [x[1] for x in ast_data]
     AST_Statistics(asts,datapath+problem+'_AST_statistic' )
+    # write source code
+    with open(datapath+problem+ codejson, 'w') as outfile:
+        jsonObjs =[]
+        for label, code in sourcecode_data:
+            jsonObjs.append({'label': label,'code': code})
+        json.dump(jsonObjs, outfile)
+
     print '# Instances:', len(ast_data)
 
 def generateTrain_CV_Test(datafile='', type ='AST'):
@@ -144,16 +161,17 @@ def generateTrain_CV_Test(datafile='', type ='AST'):
     with open(datafile, 'r') as f:
         jsonObjs = json.load(f)
 
-    name =''
-    if type =='AST':
-        name = astjson
-    else:
+    type = type.lower()
+    name = astjson
+    if type =='graph':
         name = graphjson
+    if type == 'code':
+        name = codejson
 
     numInst = len(jsonObjs)
     # shuffle data
 
-    np.random.seed(314159)
+    np.random.seed(randomseed)
     np.random.shuffle(jsonObjs)
 
     print 'Instances:', len(jsonObjs)
@@ -178,6 +196,24 @@ def generateTrain_CV_Test(datafile='', type ='AST'):
     json.dump(pdata, f)
     f.close()
 
+def jsonCode2SingleFile(datafile):
+    with open(datafile, 'r') as f:
+        jsonObjs = json.load(f)
+    idlen = len(str(len(jsonObjs)))
+
+    dir_path = datapath+'SourceCode/'+ problem+'/'
+
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+    print 'save source code in: ', dir_path
+    for idx, obj in enumerate(jsonObjs):
+        label = obj["label"]
+        code = obj["code"]
+        fname = str(idx).zfill(idlen)+'_'+str(label)+'.c'
+        with codecs.open(dir_path+fname,'w', encoding='utf-8') as outfile:
+            outfile.write(code)
+
+
 def showTree(node, offset=0):
     print ' ' * offset + str(node.name)
     for child in node.descendants:
@@ -186,8 +222,12 @@ if __name__ =='__main__':
     # read data from crawler directory, parse to AST, Save in Json format
     ReadData()
     # split into Train -CV - Test
-    generateTrain_CV_Test(datapath+problem+astjson, type='AST')
-    generateTrain_CV_Test(datafile=datapath+problem+graphjson, type='Graph')
+    # generateTrain_CV_Test(datapath+problem+astjson, type='AST')
+    # generateTrain_CV_Test(datafile=datapath+problem+graphjson, type='Graph')
+    # generateTrain_CV_Test(datafile=datapath+problem+codejson, type='Code')
+
+    jsonCode2SingleFile(datapath+problem+codejson)
+
 
     # text ='''
     # int main()

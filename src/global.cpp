@@ -117,7 +117,7 @@ void SaveParam(const char * filepath){
 	fwrite( &num_weights, sizeof(int), 1, outfile);
 	fwrite( &num_biases,  sizeof(int), 1, outfile);
 
-	cout<< num_weights << " " << num_biases << endl;
+//	cout<< num_weights << " " << num_biases << endl;
 	fwrite( weights, sizeof(float), num_weights, outfile);
 	fwrite( biases,  sizeof(float), num_biases,  outfile);
 	fflush( outfile );

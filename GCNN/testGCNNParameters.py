@@ -121,13 +121,13 @@ print 'Weights', len(Weights)
 print 'Bias', len(Biases) - len(preBword)
 #
 # write data
-# with open(params.xypath+'../paramtext.txt','w') as f:
-#     f.write('Weights\n')
-#     for w in Weights:
-#         f.write(str(w)+'\n')
-#     f.write('Biases\n')
-#     for b in Biases:
-#         f.write(str(b)+'\n')
+with open(params.xypath+'../paramtext.txt','w') as f:
+    f.write('Weights\n')
+    for w in Weights:
+        f.write(str(w)+'\n')
+    f.write('Biases\n')
+    for b in Biases:
+        f.write(str(b)+'\n')
 # dwadwad
 # 17940
 # 1544

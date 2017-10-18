@@ -1,50 +1,47 @@
 import GraphData_IO
-import gcnn_params as params
 
-datapath = params.datapath
+def getBagofWordVectors(jsonFiles =''):
 
-word_vec, vectors, numFea = GraphData_IO.LoadVocab(vocabfile=datapath + 'tokvec.txt')
-#get list of tokens
-word_dict ={}
-idx =0
-for w in word_vec:
-    if w.startswith('g_'):
-        continue
-    word_dict[w] = idx
-    idx +=1
+    word_dict={}
+    for file in jsonFiles:
+        fout = open(file+'.bow','w')
+        graphs = GraphData_IO.readGraphFromJson(jsonFile=file)
+        for g in graphs:
+            vec ={}
+            for vid, v in g.Vs.items():
+                tok = v.token
+                if tok not in word_dict:
+                    word_dict[tok] = len(word_dict)+ 1
+                tok_id = word_dict[tok]
+                if tok_id not in vec:
+                    vec[tok_id] = 1
+                else:
+                    vec[tok_id] +=1
+            # write vector
+            fout.write('label_'+str(g.label)+' ')
+            feature_vec =[]
 
-def getBagofWordVectors(dtfile ='', outfile='', classlabel =1):
+            for tok_id in sorted(vec):
+                feature_vec.append(str(tok_id)+':'+str(vec[tok_id]))
+            fout.write(' '.join(feature_vec))
+            fout.write('\n')
+        # close file
+        fout.close()
 
-    label ='True' # virus
-    if classlabel ==1: # non-virus
-        label = 'False'
-
-    f = open(outfile,'w')
-    graphs = GraphData_IO.readGraphFromJson(jsonFile=dtfile)
-    count =0
-    for g in graphs:
-        vec =[0] * len(word_dict)
-        vertexes = g.getVertexes()
-        for v in vertexes:
-            token = vertexes[v].token
-            if token not in word_dict:
-                idx=0
-            else:
-                idx = word_dict[token]
-            vec[word_dict[token]] +=1
-        # write vector to file
-        vec = [str(i) for i in vec]
-        f.write(' '.join(vec))
-
-        f.write(' '+label+'\n')
-        count +=1
-        if count>=10:
-            break
-    f.close()
 if __name__=='__main__':
-    datafile = params.datafiles
-    getBagofWordVectors(datafile['train_nonvirus'], datapath + 'vec_train_nonvirus', classlabel=1)
-    getBagofWordVectors(datafile['train_virus'], datapath+'vec_train_virus', classlabel=2)
-    getBagofWordVectors(datafile['test_nonvirus'], datapath + 'vec_test_nonvirus', classlabel=1)
-    getBagofWordVectors(datafile['test_virus'], datapath + 'vec_test_virus', classlabel=2)
+    datapath = '/home/s1520015/Experiment/5Folds/'
+    datafiles = []
+    for idx in range(1, 6):
+        datafiles.append(datapath + '/Fold' + str(idx) + '/dataFold' + str(idx))
 
+    getBagofWordVectors(datafiles)
+
+    datapath = '/home/s1520015/Experiment/CodeChef/OriginalTrees/'
+    problem = 'SUMTRIAN'
+    getBagofWordVectors([datapath + problem + '_train_AstGraph.json', datapath + problem + '_CV_AstGraph.json', datapath + problem + '_test_AstGraph.json'])
+    problem = 'MNMX'
+    getBagofWordVectors([datapath + problem + '_train_AstGraph.json', datapath + problem + '_CV_AstGraph.json', datapath + problem + '_test_AstGraph.json'])
+    problem = 'FLOW016'
+    getBagofWordVectors([datapath + problem + '_train_AstGraph.json', datapath + problem + '_CV_AstGraph.json', datapath + problem + '_test_AstGraph.json'])
+    problem = 'SUBINC'
+    getBagofWordVectors([datapath + problem + '_train_AstGraph.json', datapath + problem + '_CV_AstGraph.json', datapath + problem + '_test_AstGraph.json'])

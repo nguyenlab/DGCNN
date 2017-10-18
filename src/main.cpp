@@ -164,16 +164,16 @@ int main(int argc, char* argv[]){
 	cout<<num_weights<<endl;
 	
 	int tobegin = atoi(getvarvalue(varlist,"begin"));
-	char* model_file = getvarvalue(varlist,"model_file");  
-	if(strcmp(model_file,"none") == 0)
+	char* pretrained_file = getvarvalue(varlist,"pretrained_file");  
+	if(strcmp(pretrained_file,"none") == 0)
 	{
 		cout<<"randomly initialize weights and biases"<<endl;
 	}
 	else
 	{
-		cout<<"read pretrained weights and biases from: '"<<model_file<<"'"<<endl;
+		cout<<"read pretrained weights and biases from: '"<<pretrained_file<<"'"<<endl;
 //	    readTBCNNParam2(tobegin,alpha,n_miniGDchange);
-		ReadNetParams(model_file);
+		ReadNetParams(pretrained_file);
 	    n_miniGD = tobegin*num_train/batch_size;
 	}
 	//write :
@@ -191,13 +191,15 @@ int main(int argc, char* argv[]){
 		printf("\nnum_CV <10, save model at maximum of training\n");
 		markCV = 0;
 	}
-	printf("\nbegin test\n");	
 		
 	int t_start=clock();
 	
-	char * phase = getvarvalue(varlist,"epoch_num");
+	char * phase = getvarvalue(varlist,"phase");
+	char * model_file= getvarvalue(varlist,"model_file");
 	if (strcmp(phase,"test") ==0) // test mode
 	{
+		cout<<"\n\nread pretrained weights and biases from: '"<<model_file<<"'"<<endl;
+		ReadNetParams(model_file);
 		cout<<"testing and writing results..."<<endl;
 		// write to file
 		FILE *f_vectest, *f_veccv, *f_vectrain,*f_probcv, *f_probtest;
@@ -379,10 +381,13 @@ int main(int argc, char* argv[]){
 
 	}
 	// save parameters at the max accuracy of CV
-	//	printf("\n Save params at epoch: %d", m_nEpoch);
+	//	
 	memcpy(weights, m_weights, num_weights*sizeof(float));
 	memcpy(biases,m_biases, num_biases*sizeof(float));
-	saveNetParams(m_nEpoch,m_alpha,n_miniGDchange);
+//	saveNetParams(m_nEpoch,m_alpha,n_miniGDchange);
+
+    cout<<"\n Save params at epoch: " << m_nEpoch<<", to file:"<<model_file;
+	SaveParam(model_file);
 	
 	int t_stop =clock();
 	cout<<"\nrunning time: "<< t_stop - t_start;

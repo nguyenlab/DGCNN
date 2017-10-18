@@ -1,41 +1,34 @@
-batch
-10
-begin
-1
-num of epoch
-59
-mark point to write output
-59
-mode (type of output data)
-0
-num_train
-5691
-num_cv
-1897
-num_test
-1897
-output
-2
-parameter file
-paramTest_ASTGraph_V2
-fx_train  (x -training file)
-MNMX_tbcnn_Xtrain
-fx_CV     (x - validation file)
-MNMX_tbcnn_XCV
-fx_test   (x - test file)
-MNMX_tbcnn_Xtest
-fy_train  (y - training file)
-MNMX_tbcnn_Ytrain.txt
-fy_CV     (y- validation file)
-MNMX_tbcnn_YCV.txt
-fy_test   (y- test file)
-MNMX_tbcnn_Ytest.txt
-alpha
-0.1
-beta
-0.7
-active function(ReLu, tanh)
-tanh
-database
-MNMX
-// p1: epoch, p2: mark - export from this round, mode: 0 - export probabilities, 1- predicting results, 2-vector
+//phase = train or test
+phase:test
+//file stores pretrained weights and biases
+//if = none: randomly initialized
+pretrained_file:none
+model_file:model.txt
+batch:10
+begin:1
+//num of epoch
+epoch_num:2
+//X train, CV, test files
+// if num_cv<10: training set is used instead of CV set
+num_train:3890
+num_cv:1297
+num_test:1297
+//number of labels
+output:5
+//parameter file
+param_file:paramTest_ASTGraph_V1
+//x-train, CV, test
+x_train:./xy_test/SUBINC_gcnn_train_Xnet
+x_cv:./xy_test/SUBINC_gcnn_CV_Xnet
+x_test:./xy_test/SUBINC_gcnn_test_Xnet
+//y-train, CV, test
+y_train:./xy_test/SUBINC_gcnn_train_Y.txt
+y_CV:./xy_test/SUBINC_gcnn_CV_Y.txt
+y_test:./xy_test/SUBINC_gcnn_test_Y.txt
+alpha:0.1
+beta:0.7
+//active function(ReLu, tanh)
+act_func:tanh
+database:SUBINC
+// Lost function MSE()
+loss:MSE

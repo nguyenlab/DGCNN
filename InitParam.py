@@ -17,8 +17,8 @@ def InitParam(OldWeights, num = None, newWeights = None, upper = None, lower = N
         
     else:
         if upper == None:
-            upper = .03 #.02
-            lower = -.03 #-.02
+            upper = .02 #.02
+            lower = -.02 #-.02
         tmpWeights = np.random.uniform(lower, upper, num)
         OldWeights = np.concatenate((OldWeights, tmpWeights.reshape(-1) ))
     return OldWeights,range(oldlen, oldlen + num)

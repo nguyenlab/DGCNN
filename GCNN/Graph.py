@@ -4,14 +4,28 @@ import re
 
 
 class GVertex:
-    def __init__(self, id=None, name='', token='', toktype='ASM', content=None):
+    def __init__(self, id=None, name='', token='', toktype='ASM', content=None, incoming=None,outgoing =None):
         self.id = id
         self.name = name
         self.token = token
         self.toktype = toktype
         if content is None:
             content=[]
+        if incoming is None:
+            self.incoming =[]
+        else:
+            self.incoming = incoming
+        if outgoing is None:
+            self.outgoing =[]
+        else:
+            self.outgoing = outgoing
         self.content = content
+    def getInDegree(self):
+        return len(self.incoming)
+    def getOutDegree(self):
+        return len(self.outgoing)
+    def getDegree(self):
+        return len(self.incoming) + len(self.outgoing)
     def getData(self, toktypeDict, withOps = True):
         if not withOps:
             data =[self.token]
@@ -41,17 +55,30 @@ class Graph:
             self.Vs ={}
         else:
             self.Vs = vs
-        if es is None:
-            self.Es =[]
-        else:
-            self.Es = es
+
+        self.Es = []
+        if es is not None:
+            for (id1, id2) in es:
+                self.addEdgebyID(id1, id2)
         self.label = label
     def addVetex(self, v=None):
         self.Vs[v.id] = v
     def addEdge(self, node1, node2):
         self.Es.append((node1.id, node2.id))
+        if node2.id not in node1.outgoing:
+            node1.outgoing.append(node2.id)
+        if node1.id not in node2.incoming:
+            node2.incoming.append(node1.id)
+
     def addEdgebyID(self, node1_id, node2_id):
         self.Es.append((node1_id, node2_id))
+        node1 = self.Vs[node1_id]
+        node2 = self.Vs[node2_id]
+        if node2_id not in node1.outgoing:
+            node1.outgoing.append(node2_id)
+        if node1_id not in node2.incoming:
+            node2.incoming.append(node1_id)
+
     def show(self, buf = sys.stdout):
         buf.write('Vertexes\n')
         for id in self.Vs:
@@ -60,11 +87,26 @@ class Graph:
         buf.write('Edges\n')
         for (v1, v2) in self.Es:
             buf.write(str(v1)+' --> '+ str(v2)+'\n')
+    def toGraphViz(self):
+        gviz = 'digraph finite_state_machine { node [shape = rectangle];\n'
+
+        for id in self.Vs:
+            gviz +='v{0}_{1}[label="{0}\\n{1}"];\n'.format(id,self.Vs[id].token)
+        for (v1, v2) in self.Es:
+            gviz += 'v{0}_{1} -> v{2}_{3};\n'.format(v1,self.Vs[v1].token,v2, self.Vs[v2].token)
+
+        gviz+='}'
+        return gviz
     def getVertexes(self):
         return self.Vs
     def getEdges(self):
         return self.Es
-
+    def maxDegree(self):
+        maxD =0
+        for k, v in self.Vs.items():
+            d= v.getDegree()
+            if maxD < d:
+                maxD = d
     def dump(self):
         vertexes=[]
         for v in self.Vs.values():
