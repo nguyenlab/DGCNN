@@ -1,7 +1,0 @@
-digraph G {
-node[shape=rectangle,style=filled,fillcolor=lightsteelblue,color=lightsteelblue]
-bgcolor="transparent"
-node1 -> node2 [color="#000000"];
-node2 -> node3 [color="#000000"];
-node3 -> node4 [color="#000000"];
-}

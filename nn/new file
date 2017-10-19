@@ -1,8 +1,0 @@
-import numpy as np
-import sys
-import cPickle as p
-import gl, FFNN
-import InitParam as init
-import test
-import copy
-import test_acc as test
