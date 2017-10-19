@@ -1,0 +1,180 @@
+import numpy as np
+import sys
+import cPickle as p
+sys.path.append('../nn/')
+sys.path.append('../')
+import gl, FFNN
+import InitParam as init
+import test
+import copy
+import test_acc as test
+###############################
+# Configuration
+#Config = 'load'
+Config = 'restart'
+tobegin = 0
+toload = tobegin
+toload = 0
+itebegin = 0
+###############################
+# read data
+
+seed = np.random.randint(1000000)
+seed = 423329
+print 'seed:', seed
+
+import read_data as read
+
+X_train, X_CV, X_test, y_train, y_CV, y_test = read.readXy()
+
+
+np.random.seed(100)
+np.random.shuffle(X_train)
+np.random.seed(100)
+np.random.shuffle(y_train)
+np.random.seed(100)
+np.random.shuffle(X_CV)
+np.random.seed(100)
+np.random.shuffle(y_CV)
+np.random.seed(100)
+np.random.shuffle(X_test)
+np.random.seed(100)
+np.random.shuffle(y_test)
+
+np.random.seed(314)
+test_train_X = [X_train[i] for i in xrange(len(X_train)) if np.random.rand() > .7]
+np.random.seed(314)
+test_train_y = [y_train[i] for i in xrange(len(X_train)) if np.random.rand() > .7]
+
+print 'len of train samples', len(test_train_y)
+
+
+##############################
+# initialize weights
+
+
+#np.random.seed(123)
+
+if Config == 'load':
+    Weights = p.load(file('param/param_'+str(toload)+'_Weights'))
+    Biases  = p.load(file('param/param_'+str(toload)+'_Biases' ))
+    gradWeights = np.zeros_like(Weights)
+    gradBiases  = np.zeros_like(Biases)
+    
+elif Config == 'restart':
+    
+    np.random.seed(seed)
+    tobegin = 0
+    Weights = np.array([])
+    Biases  = np.array([])
+        
+    np.random.seed(seed)
+    embeddings = p.load(open('../02-ConstructVocabDictionary/embed.pkl','rb') )
+    
+    Biases, Bembed = init.InitParam(Biases, newWeights = embeddings)
+    
+    Weights, Wconv2 = init.InitParam(Weights, num = gl.numFea * gl.numCon2 * gl.con2_win)
+    Biases,  Bconv2 = init.InitParam(Biases, num = gl.numCon2)
+
+    Weights, Whid  = init.InitParam(Weights, num = gl.numCon2 * gl.numHid)
+    Biases,  Bhid  = init.InitParam(Biases,  num = gl.numHid)
+    
+    Weights, Wout  = init.InitParam(Weights, num = gl.numOut * gl.numHid)
+    Biases,  Bout  = init.InitParam(Biases,  num = gl.numOut)
+    
+    Weights = Weights.reshape((-1,1))
+    Biases  = Biases.reshape((-1,1))
+    gradWeights = np.zeros_like(Weights)
+    gradBiases  = np.zeros_like(Biases)
+
+
+##############################
+# save parameters
+def saveParam(Weights, Biases, ite):
+    fout = open('param/param_' + str(ite) + '_Weights', 'wb')
+    p.dump(Weights, fout, 1)
+    fout.close()
+    fout = open('param/param_' + str(ite) + '_Biases', 'wb')
+    p.dump(Biases,  fout, 1)
+    fout.close()
+
+#test.test(X_CV, y_CV, Weights, Biases)
+#asdfsf
+
+###############################
+# gradient descent
+J = 0
+
+numToTrain = len(X_train)
+
+
+flog = open('log/'+ str(seed)+'_CandW_RE_regularize_W', 'w')
+flog.close()
+
+SGD_cnt = 0
+
+best_cv_acc = 0
+
+for ite in xrange(tobegin, 200):
+    #test.test(XCV, yCV, Weights, Biases)
+    itebegin = 0
+    if ite == tobegin:
+        itebegin = itebegin
+    else:
+        itebegin = 0
+    
+    #if ite == 5:
+    #    gl.alpha = .003
+    for nInst in xrange(itebegin, numToTrain):
+        
+        
+        if nInst == 0:
+            flog = open('log/'+ str(seed)+'_CandW_RE_regularize_W'+str(), 'a+')
+            J, acc = test.test(test_train_X, test_train_y, Weights, Biases)
+            flog.write( str(ite) + ' ' + str(nInst) + ' train ' +  str(J) + ' ' + str(acc) +'\n')
+            
+            J, acc = test.test(X_CV, y_CV, Weights, Biases)
+            flog.write( str(ite) + ' ' + str(nInst) + ' CV ' +  str(J) + ' ' + str(acc) +'\n')
+            cv_acc = acc
+            J, acc = test.test(X_test, y_test, Weights, Biases)
+            flog.write( str(ite) + ' ' + str(nInst) + ' test ' +  str(J) + ' ' + str(acc) +'\n')
+            
+            flog.close()
+            
+            if cv_acc > best_cv_acc:
+                best_cv_acc = cv_acc
+                saveParam(Weights, Biases, seed)
+
+        SGD_cnt += 1
+        
+        #if ite != 0 and ite != tobegin and nInst == 0:
+        #    saveParam(Weights, Biases, ite)
+        #    test.test(X_CV, y_CV, Weights, Biases)
+            
+        fin = open(X_train[nInst])
+        Xnet = p.load(fin)
+        fin.close()
+        h = FFNN.forwardpropagation(Xnet[0], None, Weights, Biases)
+        t = y_train[nInst]
+        
+        J -= np.log( h[t] )
+        Xnet[-1].dE_by_dy = copy.copy(h)
+        Xnet[-1].dE_by_dy[t] -= 1
+        Xnet[-1].dE_by_dz = copy.copy(Xnet[-1].dE_by_dy)
+        
+        FFNN.backpropagation(Xnet[-1], Weights, Biases, gradWeights, gradBiases)
+        
+        Weights -= gl.alpha * (gradWeights + gl.C * Weights)
+        
+        Biases  -= gl.alpha * gradBiases
+        
+        # regularization       
+        #Weights[Wout] -= gl.alpha * gl.C_2 * Weights[Wout]
+        
+        gradWeights *= gl.decay
+        gradBiases  *= gl.decay
+        if nInst % 1000 == 0:
+            print 'ite', ite, 'nInst', nInst,  J / 100
+            J = 0
+            
+            
