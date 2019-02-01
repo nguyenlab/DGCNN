@@ -13,3 +13,6 @@
 3. Training the network
 	8. run CNN setting.txt
 	
+Please cite our paper entiles "DGCNN: A convolutional neural network over large-scale labeled graphs"  published in Neural Network 2018, if you used in your research.
+
+
